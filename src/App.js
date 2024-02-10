@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
 function createRandomPost() {
@@ -7,6 +7,10 @@ function createRandomPost() {
     body: faker.hacker.phrase(),
   };
 }
+
+
+// Create new context
+const PostContext = createContext()
 
 function App() {
   const [posts, setPosts] = useState(() =>
@@ -42,7 +46,14 @@ function App() {
   );
 
   return (
-    <section>
+    //create provider
+    <PostContext.Provider value={{
+      posts: searchedPosts,
+      onClearPosts: handleClearPosts,
+      searchQuery,
+      setSearchQuery,
+    }}>
+      <section>
       <button
         onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
         className="btn-fake-dark-mode"
@@ -59,7 +70,9 @@ function App() {
       <Main posts={searchedPosts} onAddPost={handleAddPost} />
       <Archive onAddPost={handleAddPost} />
       <Footer />
-    </section>
+      </section>
+    </PostContext.Provider>
+   
   );
 }
 
